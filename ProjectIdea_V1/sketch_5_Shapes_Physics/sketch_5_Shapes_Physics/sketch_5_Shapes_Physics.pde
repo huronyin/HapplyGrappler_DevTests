@@ -70,14 +70,14 @@ float             edgeTopLeftX                        = 0.0;
 float             edgeTopLeftY                        = 0.0; 
 float             edgeBottomRightX                    = worldWidth; 
 float             edgeBottomRightY                    = worldHeight;
+float             count = 0;
+int               trigger = 0;
 
 
 /* Initialization of interative shapes */
-FBox              b;
-FPoly             t;
-FCircle           g;
-FCircle           e;
+
 FBlob             f;
+FBlob             f1;
 
 
 /* Initialization of virtual tool */
@@ -126,66 +126,44 @@ void setup(){
   hAPI_Fisica.init(this); 
   hAPI_Fisica.setScale(pixelsPerCentimeter); 
   world               = new FWorld();
-  
-  
-  ///* creation of square shape */
-  //b                   = new FBox(3.0, 3.0);
-  //b.setPosition(edgeTopLeftX+worldWidth/4.0, edgeTopLeftY+worldHeight/2.0);
-  //b.setDensity(30);
-  //b.setFill(random(255), random(255), random(255));
-  //world.add(b);
-  
-  
-  ///* creation of T shape */
-  //t                   = new FPoly(); 
-  //t.vertex(-1.5, -1.0);
-  //t.vertex( 1.5, -1.0);
-  //t.vertex( 3.0/2.0, 0);
-  //t.vertex( 1.0/2.0, 0);
-  //t.vertex( 1.0/2.0, 4.0/2.0);
-  //t.vertex(-1.0/2.0, 4.0/2.0);
-  //t.vertex(-1.0/2.0, 0);
-  //t.vertex(-3.0/2.0, 0);
-  //t.setPosition(edgeTopLeftX+10, edgeTopLeftY+5); 
-  //t.setDensity(50); 
-  //t.setFill(random(255),random(255),random(255));
-  //world.add(t);
-  
-  
-  ///* creation of small circle shape */
-  //g                   = new FCircle(1.0);
-  //g.setPosition(7, 7);
-  //g.setFill(random(255),random(255),random(255));
-  //g.setDensity(10);
-  //world.add(g);
-  
-  
-  ///* creation of large circle shape */
-  //e                   = new FCircle(5);
-  //e.setPosition(5, 3);
-  //e.setFill(random(255), random(255), random(255));
-  //e.setDensity(18); //60g/cm2
-  //world.add(e);
-  
-  
+   
   /* creation of blob shape, warning may slow down simulation */
   f                   = new FBlob();
-  float sca           = random(4, 5);
+  float sca           = 4;
   sca = sca/2.0;
-  f.setAsCircle(9, 3, sca, 15);
+  f.setAsCircle(9, 3, sca, 8);
   f.setStroke(0);
-  f.setStrokeWeight(2);
+  f.setStrokeWeight(10);
   f.setFill(255);
-  f.setFriction(0);
-  f.setDensity(18);
-  //f.setDensity(30);
-  f.setFill(random(255), random(255), random(255));
+  f.setFriction(100);
+  //f.setDensity(1000);
+  f.setDensity(1000);
+  f.setFill(10, 10, 10);
   world.add(f);
+  
+  
+  /* creation of second blob shape*/
+  f1                   = new FBlob();
+  float scb           = 4;
+  scb = scb/2.0;
+  f1.setAsCircle(15, 3, scb, 8);
+  f1.setStroke(0);
+  f1.setStrokeWeight(10);
+  f1.setFill(255);
+  f1.setFriction(100);
+  //f.setDensity(1000);
+  f1.setDensity(4);
+  f1.setFill(155, 155, 155);
+  world.add(f1);
+  
+  
+  
+  
   
   
   /* Haptic Tool Initialization */
   s                   = new HVirtualCoupling((1)); 
-  s.h_avatar.setDensity(4); 
+  s.h_avatar.setDensity(1000); 
   s.init(world, edgeTopLeftX+worldWidth/2, edgeTopLeftY+2); 
  
   
@@ -198,7 +176,7 @@ void setup(){
 
 
   /* world conditions setup */
-  world.setGravity((0.0), (1000.0)); //1000 cm/(s^2)
+  world.setGravity((0.0), (1000)); //1000 cm/(s^2)
   //world.setGravity((0.0), (0.0));
   world.setEdges((edgeTopLeftX), (edgeTopLeftY), (edgeBottomRightX), (edgeBottomRightY)); 
   world.setEdgesRestitution(.4);
@@ -258,10 +236,30 @@ class SimulationThread implements Runnable{
     
     torques.set(widgetOne.set_device_torques(fEE.array()));
     widgetOne.device_write_torques();
+    
+    if(count == 10000){
+       if(trigger == 0){
+         count = 0;
+         f.setDensity(5);
+         f1.setDensity(1000);
+         trigger = 1;
+         print("Role Switch\n");
+       }
+       else if(trigger == 1){
+         count = 0;
+         f.setDensity(1000);
+         f1.setDensity(5);
+         trigger = 0;
+         print("Role Switch\n");
+       }
+        
+    }
   
     world.step(1.0f/1000.0f);
+    
   
     renderingForce = false;
+    count = count + 1;
   }
 }
 /* end simulation section **********************************************************************************************/
