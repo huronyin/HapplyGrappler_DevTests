@@ -1,0 +1,4 @@
+**Background**: I experimented with the Haply example code titled “Shapes,” which has a soft object known as “Blob.” In this example, altering the Blob's density enables an avatar to be “ “eaten” by the “Blob”.
+
+
+**Game Rules**: This two-player game involves controlling a pair of Blobs using Haply devices. Each Blob has differing densities: one with high density and the other with low density. These densities alternate every 10 seconds. The player controlling the low-density Blob must evade the high-density Blob to avoid being "eaten." Conversely, the player handling the high-density Blob aims to catch and “eat” the low-density Blob. However, with the densities switching every 10 seconds, players must continuously adapt their strategies, switching from pursuing to evading as their Blob's density changes.
