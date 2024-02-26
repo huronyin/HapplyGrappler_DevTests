@@ -154,7 +154,7 @@ void setup(){
   //f.setDensity(1000);
   f1.setDensity(4);
   f1.setFill(155, 155, 155);
-  world.add(f1);
+  //world.add(f1);
   
   
   
@@ -236,24 +236,38 @@ class SimulationThread implements Runnable{
     
     torques.set(widgetOne.set_device_torques(fEE.array()));
     widgetOne.device_write_torques();
-    
     if(count == 10000){
-       if(trigger == 0){
-         count = 0;
-         f.setDensity(5);
-         f1.setDensity(1000);
-         trigger = 1;
-         print("Role Switch\n");
-       }
-       else if(trigger == 1){
-         count = 0;
-         f.setDensity(1000);
-         f1.setDensity(5);
-         trigger = 0;
-         print("Role Switch\n");
-       }
-        
+      if(trigger == 0){
+        count = 0;
+        trigger = 1;
+        f.setDensity(5);
+        print("Density Change");
+      }
+      else{
+        trigger = 0;
+        count = 0;
+        f.setDensity(1000);
+        print("Density Change");
+      }
     }
+    
+    //if(count == 10000){
+    //   if(trigger == 0){
+    //     count = 0;
+    //     f.setDensity(5);
+    //     f1.setDensity(1000);
+    //     trigger = 1;
+    //     print("Role Switch\n");
+    //   }
+    //   else if(trigger == 1){
+    //     count = 0;
+    //     f.setDensity(1000);
+    //     f1.setDensity(5);
+    //     trigger = 0;
+    //     print("Role Switch\n");
+    //   }
+        
+    //}
   
     world.step(1.0f/1000.0f);
     
